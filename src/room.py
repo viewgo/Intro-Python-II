@@ -1,3 +1,4 @@
+
 class Room():
     def __init__(self, name, description, n=None, s=None, e=None, w=None):
         self.name = name
@@ -12,5 +13,3 @@ class Room():
 
     def connectedRooms(self):
         return f"n: {self.n}, s: {self.s}, e: {self.e}, w: {self.w}"
-
-    

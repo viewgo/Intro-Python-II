@@ -2,7 +2,6 @@ from room import Room
 from player import Player
 
 # Declare all the rooms
-
 room = {
     'outside':  Room("Outside Cave Entrance",
                      "North of you, the cave mount beckons"),
@@ -24,7 +23,6 @@ earlier adventurers. The only exit is to the south."""),
 
 
 # Link rooms together
-
 room['outside'].n = room['foyer']
 room['foyer'].s = room['outside']
 room['foyer'].n = room['overlook']
@@ -35,9 +33,14 @@ room['narrow'].n = room['treasure']
 room['treasure'].s = room['narrow']
 
 
-#
-# Main
-#
+choice_options = ["n", "s", "e", "w", "q"]
+
+
+def displayMessages():
+    print("\n-------------------------------")
+    print(f"Location: {player.currentRoom.name}")
+    print(f"{player.currentRoom.description}")
+    print(player.currentRoom.connectedRooms())
 
 
 def getUserChoice():
@@ -68,41 +71,20 @@ def quit():
     exit()
 
 
-choice_options = ["n", "s", "e", "w", "q"]
-
 # Make a new player object that is currently in the 'outside' room.
 player = Player(room['outside'])
 
-
-# Write a loop that:
-#
-# * Prints the current room name
-# * Prints the current description (the textwrap module might be useful here).
-# * Waits for user input and decides what to do.
-#
-# If the user enters a cardinal direction, attempt to move to the room there.
-# Print an error message if the movement isn't allowed.
-#
-# If the user enters "q", quit the game.
-
 # Start of Game
-print("\n-------------------------------")
-print(f"Location: {player.currentRoom.name}")
-print(f"{player.currentRoom.description}")
-print(player.currentRoom.connectedRooms())
+displayMessages()
+
 # First user choice
-
-
 user_choice = getUserChoice()
-# print(f"INPUT: {user_choice}")
 
+# Game loop
 while user_choice != "q":
     changeRoom(user_choice)
-    print("\n-------------------------------")
-    print(f"Location: {player.currentRoom.name}")
-    print(f"{player.currentRoom.description}")
-    print(player.currentRoom.connectedRooms())
+    displayMessages()
     user_choice = getUserChoice()
 
-
+# Quit if loop exits
 quit()
