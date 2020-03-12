@@ -34,7 +34,7 @@ Up to this point, you've gotten your feet wet by working on a bunch of small Pyt
 The `/src` directory contains the files `adv.py`, which is where the main logic for the game should live, `room.py`, which will contain the definition of the Room class, and `player.py`, which will contain the definition of the Player class.
 
 
-* Add a REPL parser to `adv.py` that accepts directional commands to move the player
+<!-- * Add a REPL parser to `adv.py` that accepts directional commands to move the player
   * After each move, the REPL should print the name and description of the player's current room
   * Valid commands are `n`, `s`, `e` and `w` which move the player North, South, East or West
   * The parser should print an error if the player tries to move where there is no room.
@@ -67,9 +67,9 @@ The `/src` directory contains the files `adv.py`, which is where the main logic 
   * Add functionality to the main loop that prints out all the items that are
     visible to the player when they are in that room.
 
-* Add capability to add `Item`s to the player's inventory. The inventory can
+ * Add capability to add `Item`s to the player's inventory. The inventory can
   also be a `list` of items "in" the player, similar to how `Item`s can be in a
-  `Room`.
+  `Room`. --> 
 
 * Add a new type of sentence the parser can understand: two words.
 

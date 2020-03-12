@@ -1,5 +1,7 @@
 from room import Room
 from player import Player
+from item import Item
+import os
 
 # Declare all the rooms
 room = {
@@ -32,36 +34,39 @@ room['narrow'].w = room['foyer']
 room['narrow'].n = room['treasure']
 room['treasure'].s = room['narrow']
 
+room['outside'].items = [
+    Item("Key", "It's a key"), Item("Rock", "It's a rock")]
+room['foyer'].items = [Item("Crystal Ball", "This shit's dank")]
 
-choice_options = ["n", "s", "e", "w", "q"]
+print(room['outside'].items)
+
+
+movement_options = ["n", "s", "e", "w", "q"]
+action_options = ["take", "drop"]
 
 
 def displayMessages():
-    print("\n-------------------------------")
+    # os.system("cls")
     print(f"Location: {player.currentRoom.name}")
     print(f"{player.currentRoom.description}")
-    print(player.currentRoom.connectedRooms())
+    player.currentRoom.displayItemList()
 
 
 def getUserChoice():
-    choice = input(
+    return input(
         "\nMove in a cardinal direction. Enter `q` to quit.\nEnter your movement: ")
-    if choice in choice_options:
-        return choice
-    else:
-        print("\nInvalid choice!")
-        return
 
 
-def changeRoom(newRoom):
-    if newRoom == 'n' and player.currentRoom.n != None:
-        player.currentRoom = player.currentRoom.n
-    elif newRoom == 's' and player.currentRoom.s != None:
-        player.currentRoom = player.currentRoom.s
-    elif newRoom == 'e' and player.currentRoom.e != None:
-        player.currentRoom = player.currentRoom.e
-    elif newRoom == 'w' and player.currentRoom.w != None:
-        player.currentRoom = player.currentRoom.w
+def gameActions(input):
+    # what kind of action (split string)
+    split = input.split(" ")
+    print(split)
+
+    # if it's two words => action
+
+    # if it's one word => move
+    if input in movement_options:
+        player.move(input)
     else:
         print("\nInvalid choice!")
         return
@@ -82,7 +87,7 @@ user_choice = getUserChoice()
 
 # Game loop
 while user_choice != "q":
-    changeRoom(user_choice)
+    gameActions(user_choice)
     displayMessages()
     user_choice = getUserChoice()
 
