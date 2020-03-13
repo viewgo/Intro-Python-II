@@ -1,7 +1,9 @@
 from room import Room
+from player import Player
+from item import Item
+import os
 
 # Declare all the rooms
-
 room = {
     'outside':  Room("Outside Cave Entrance",
                      "North of you, the cave mount beckons"),
@@ -23,29 +25,110 @@ earlier adventurers. The only exit is to the south."""),
 
 
 # Link rooms together
+room['outside'].n = room['foyer']
+room['foyer'].s = room['outside']
+room['foyer'].n = room['overlook']
+room['foyer'].e = room['narrow']
+room['overlook'].s = room['foyer']
+room['narrow'].w = room['foyer']
+room['narrow'].n = room['treasure']
+room['treasure'].s = room['narrow']
 
-room['outside'].n_to = room['foyer']
-room['foyer'].s_to = room['outside']
-room['foyer'].n_to = room['overlook']
-room['foyer'].e_to = room['narrow']
-room['overlook'].s_to = room['foyer']
-room['narrow'].w_to = room['foyer']
-room['narrow'].n_to = room['treasure']
-room['treasure'].s_to = room['narrow']
+room['outside'].items = [
+    Item("Key", "It's a key"), Item("Rock", "It's a rock")]
+room['foyer'].items = [Item("Gold", "A bag of 100 gold pieces")]
 
-#
-# Main
-#
+print(room['outside'].items)
+
+
+movement_options = ["n", "s", "e", "w", "i", "inventory", "q"]
+action_options = ["take", "drop"]
+
+
+def clear():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
+def displayMessages():
+    print(f"Location: {player.currentRoom.name}")
+    print(f"{player.currentRoom.description}")
+    player.currentRoom.displayItemList()
+
+
+def getUserChoice():
+
+    return input(
+        "\nMove in a cardinal direction. Enter `q` to quit.\nEnter your movement: ")
+
+
+def gameActions(input):
+    # what kind of action (split string)
+    split = input.split(" ")
+
+    # if it's two words => action
+    if len(split) == 2:
+        action = split[0]
+        item = split[1].capitalize()
+
+        if action == action_options[0]:  # take
+            foundItem = False
+            for i in player.currentRoom.items:
+                if i.name == item:
+                    player.getItem(i)
+                    player.currentRoom.removeItem(i)
+                    foundItem = True
+            if foundItem == False:
+                clear()
+                print(f"There's no {item} here.\n")
+
+        elif action == action_options[1]:
+            foundItem = False
+            for i in player.inventory:
+                if i.name == item:
+                    player.dropItem(i)
+                    player.currentRoom.addItem(i)
+                    foundItem = True
+            if foundItem == False:
+                clear()
+                print(f"There's no {item} in your inventory.\n")
+
+        else:
+            clear()
+            print("Invalid choice!\n")
+
+    elif len(split) == 1:
+        if input in movement_options:
+            player.move(input)
+        else:
+            clear()
+            print("Invalid choice!\n")
+
+    else:
+        clear()
+        print("Invalid choice!\n")
+
+
+def quit():
+    exit()
+
 
 # Make a new player object that is currently in the 'outside' room.
+player = Player(room['outside'])
 
-# Write a loop that:
-#
-# * Prints the current room name
-# * Prints the current description (the textwrap module might be useful here).
-# * Waits for user input and decides what to do.
-#
-# If the user enters a cardinal direction, attempt to move to the room there.
-# Print an error message if the movement isn't allowed.
-#
-# If the user enters "q", quit the game.
+# Start of Game
+clear()
+displayMessages()
+
+# First user choice
+user_choice = getUserChoice()
+
+# Game loop
+while user_choice != "q":
+    gameActions(user_choice)
+    displayMessages()
+    user_choice = getUserChoice()
+    clear()
+
+
+# Quit if loop exits
+quit()
