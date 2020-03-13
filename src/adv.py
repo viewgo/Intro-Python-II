@@ -36,23 +36,27 @@ room['treasure'].s = room['narrow']
 
 room['outside'].items = [
     Item("Key", "It's a key"), Item("Rock", "It's a rock")]
-room['foyer'].items = [Item("Crystal Ball", "This shit's dank")]
+room['foyer'].items = [Item("Gold", "A bag of 100 gold pieces")]
 
 print(room['outside'].items)
 
 
-movement_options = ["n", "s", "e", "w", "q"]
+movement_options = ["n", "s", "e", "w", "i", "inventory", "q"]
 action_options = ["take", "drop"]
 
 
+def clear():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
 def displayMessages():
-    # os.system("cls")
     print(f"Location: {player.currentRoom.name}")
     print(f"{player.currentRoom.description}")
     player.currentRoom.displayItemList()
 
 
 def getUserChoice():
+
     return input(
         "\nMove in a cardinal direction. Enter `q` to quit.\nEnter your movement: ")
 
@@ -60,16 +64,48 @@ def getUserChoice():
 def gameActions(input):
     # what kind of action (split string)
     split = input.split(" ")
-    print(split)
 
     # if it's two words => action
+    if len(split) == 2:
+        action = split[0]
+        item = split[1].capitalize()
 
-    # if it's one word => move
-    if input in movement_options:
-        player.move(input)
+        if action == action_options[0]:  # take
+            foundItem = False
+            for i in player.currentRoom.items:
+                if i.name == item:
+                    player.getItem(i)
+                    player.currentRoom.removeItem(i)
+                    foundItem = True
+            if foundItem == False:
+                clear()
+                print(f"There's no {item} here.\n")
+
+        elif action == action_options[1]:
+            foundItem = False
+            for i in player.inventory:
+                if i.name == item:
+                    player.dropItem(i)
+                    player.currentRoom.addItem(i)
+                    foundItem = True
+            if foundItem == False:
+                clear()
+                print(f"There's no {item} in your inventory.\n")
+
+        else:
+            clear()
+            print("Invalid choice!\n")
+
+    elif len(split) == 1:
+        if input in movement_options:
+            player.move(input)
+        else:
+            clear()
+            print("Invalid choice!\n")
+
     else:
-        print("\nInvalid choice!")
-        return
+        clear()
+        print("Invalid choice!\n")
 
 
 def quit():
@@ -80,6 +116,7 @@ def quit():
 player = Player(room['outside'])
 
 # Start of Game
+clear()
 displayMessages()
 
 # First user choice
@@ -90,6 +127,8 @@ while user_choice != "q":
     gameActions(user_choice)
     displayMessages()
     user_choice = getUserChoice()
+    clear()
+
 
 # Quit if loop exits
 quit()

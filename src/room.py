@@ -21,3 +21,9 @@ class Room():
             print(f"Items in this room: {output}")
         elif len(self.items) == 1:
             print(f"Items in this room: {self.items[0]}")
+
+    def removeItem(self, item):
+        self.items.remove(item)
+
+    def addItem(self, item):
+        self.items.append(item)
